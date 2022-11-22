@@ -1,4 +1,4 @@
-(** Load required packages.  Not all of these packages are needed right away,
+(* (** Load required packages.  Not all of these packages are needed right away,
     but they may be useful later. **)
 
 Require Export Setoid List Ring Sorted Constructive_sets Utf8_core Wf_nat
@@ -424,4 +424,4 @@ Admitted.
 
 Theorem A5P7 : \u2200 a b c : Z, rel_prime a c \u2192 rel_prime b c \u2192 rel_prime (a*b) c.
 Proof.
-Admitted.
+Admitted. *)
