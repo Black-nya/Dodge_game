@@ -204,7 +204,7 @@ Theorem A3P4 : \u2200 a : Z, 0 < a \u2192 \u00ac a < 1.
 Proof.
 Admitted.
 
-Theorem A3P5 : \u2200 a b : Z, (a | b) \u2192 (b>0 \u2192 (a\u2264b)\u2227(-a)\u2264b)\u2227(b<0 \u2192 a\u2264(-b)\u2227(-a)\u2264(-b)).
+Theorem A3P5 : \u2200 a b : Z, (a | b) \u2192 a \u2264 b.
 Proof.
 Admitted.
 
@@ -339,7 +339,6 @@ Proof.
 Admitted.
 
 Definition prime (p : Z) := \u00ac unit p \u2227 \u2200 d : Z, (d | p) \u2192 unit d \u2228 d ~ p.
-
 Lemma lm1: \u2200 a b: Z, (a|b)<->(a|(-b)).
 Proof.
   split.
@@ -403,25 +402,7 @@ Proof.
     rewrite -A1P7 M1 A1P6 A3.
     exact.
 Qed.
-Theorem A6P1 : \u00ac prime 0.
-Proof.
-  unfold prime,not. 
-  intros.
-  destruct H.
-  pose proof (H0 2).
-  destruct H1.
-  unfold divide.
-  exists 0.
-  rewrite A1P6.
-  exact.
-  unfold unit in H1.
-  apply A2P8.
-  exact.
-  apply A4P5 in H1.
-  apply lm4.
-  exact.
-Qed.
-Lemma lm6: \u2200 a b: Z, \u00ac(a~b)<->a\u2260 \u00b1b.
+Lemma lm6: \u2200 a b: Z, \u00ac(a~b)<->a\u2260\u00b1b.
 Proof.
   split.
   intros.
@@ -474,83 +455,13 @@ Proof.
   rewrite M1 A1P6 in H0.
   exact.
 Qed. 
+Theorem A6P1 : \u00ac prime 0.
+Proof.
+Admitted.
+
 Theorem A6P2 : prime 2.
 Proof.
-  unfold prime.
-  split.
-  unfold not,unit.
-  apply A2P8.
-  intros.
-  pose proof (classic (unit d)).
-  destruct H0.
-  left.
-  exact.
-  assert (d\u2260\u00b11).
-  unfold not.
-  intros.
-  apply A3P6 in H1.
-  exact.
-  right.
-  pose proof (classic (d~2)).
-  destruct H2.
-  exact.
-  apply lm6 in H2.
-  pose proof H as H10.
-  apply A3P5 in H.
-  destruct H.
-  destruct H.
-  pose proof one_pos.
-  apply add_pos in H.
-  apply lm5.
-  exact.
-  pose proof (G1 d).
-  destruct H5.
-  rewrite H5 in H10.
-  apply lm7 in H10.
-  exact.
-  pose proof lm4.
-  unfold not.
-  intros.
-  rewrite H7 in H6.
-  apply H6.
-  left.
-  exact.
-  destruct H5.
-  apply lm5 in H5.
-  destruct H.
-  apply sto in H.
-  unfold sub in H.
-  rewrite -A2 A4 A3 in H.
-  destruct H.
-  apply A3P4 in H5.
-  exact.
-  rewrite H in H1.
-  destruct H1.
-  left.
-  exact.
-  rewrite H in H2.
-  destruct H2.
-  left.
-  exact.
-  apply lm5 in H5.
-  destruct H4.
-  apply sto in H4.
-  unfold sub in H4.
-  rewrite -A2 A4 A3 in H4.
-  destruct H4.
-  apply A3P4 in H5.
-  exact.
-  apply (S2 (-d) 1 (-1)) in H4.
-  rewrite A1P8 M3 M1 A1P7 in H4.
-  rewrite H4 in H1.
-  destruct H1.
-  right. exact.
-  apply (S2 (-d) 2 (-1)) in H4.
-  rewrite A1P8 M3 M1 A1P7 in H4.
-  rewrite H4 in H2.
-  destruct H2.
-  right. exact.
-Qed.
+Admitted.
 
 Theorem A6P3 : \u2200 p q : Z, prime p \u2192 prime q \u2192 rel_prime p q \u2228 p ~ q.
 Proof.
@@ -559,27 +470,262 @@ Admitted.
 Theorem A6P4 : \u2200 p a : Z, prime p \u2192 (p | a) \u2228 rel_prime p a.
 Proof.
 Admitted.
-
-Theorem A6P5 : \u2200 p : Z, \u00ac prime p \u2192 \u2203 n, 1 < n < p \u2227 (n | p).
+Lemma lm10: \u2200 p q : Prop, \u00ac (p \u2227 q) \u2192 \u00ac p \u2228 \u00ac q.
 Proof.
   intros.
-  assert (unit p \u2228 \u2203 d : Z, (d | p) \u2192 \u00ac unit d \u2227 \u00ac d ~ p).
-  pose proof (classic (unit p)).
+  pose proof (classic (p)).
   destruct H0.
+  unfold not in H.
+  pose proof (classic q).
+  destruct H1.
+  exfalso. apply H.
+  split. exact. exact.
+  right. exact.
+  left. exact.
+Qed.
+Theorem lm11 : \u2200 A (P : A \u2192 Prop), (\u2203 x, \u00ac P x) \u2194 \u00ac (\u2200 x, P x).
+Proof.
+  split.
+  intros.
+  unfold not.
+  intros.
+  destruct H.
+  pose proof H0 x.
+  exact.
+  intros.
+  unfold not in H.
+  
+  pose proof (classic (\u2203 x : A, \u00acP x)).
+  destruct H0.
+  exact.
+  unfold not in H0.
+  exfalso.
+  apply H.
+  intros.
+  pose proof (classic (P x)).
+  destruct H1.
+  exact.
+  unfold not in H1.
+  exfalso.
+  apply H0.
+  exists x.
+  exact.
+Qed.
+Lemma lm12: \u2200 p q : Prop, \u00ac (p -> q) \u2192 p \u2227 \u00acq.
+Proof.
+  intros.
+  unfold not in H.
+  pose proof (classic p).
+  pose proof (classic q).
+  destruct H0.
+  destruct H1.
+  exfalso.
+  apply H.
+  intros.
+  exact.
+  split. exact. exact.
+  destruct H1.
+  exfalso.
+  apply H.
+  intros.
+  exact.
+  exfalso.
+  apply H.
+  intros.
+  exact.
+Qed.
+Lemma lm13: \u2200 p q : Prop, \u00ac (p \/ q) \u2192 \u00acp \u2227 \u00acq.
+Proof.
+  intros.
+  unfold not in H.
+  pose proof (classic p).
+  pose proof (classic q).
+  destruct H0.
+  exfalso.
+  apply H.
+  left. exact.
+  destruct H1.
+  exfalso. apply H. right. exact.
+  split. exact. exact.
+Qed.
+Lemma lm14: \u2200 A (P : A \u2192 Prop), (\u2203 x, P x) \u2194 \u00ac (\u2200 x, \u00ac P x).
+Proof.
+  split.
+  intros.
+  destruct H.
+  unfold not.
+  intros.
+  pose proof H0 x.
+  apply H1.
+  exact.
+  intros.
+  unfold not in H.
+  pose proof (classic (\u2203 x : A, P x)).
+  destruct H0.
+  exact.
+  unfold not in H0.
+  exfalso.
+  apply H.
+  intros.
+  apply H0.
+  exists x.
+  exact.
+Qed.
+Theorem A6P5 : \u2200 p : Z, \u00ac prime p -> p>0 \u2192 unit p \/ \u2203 n, 1 < n < p \u2227 (n | p).
+Proof.
+  intros.
+  
+  unfold prime in H.
+  apply lm10 in H.
+  destruct H.
+  apply NNPP in H.
+  left. exact.
+  right.
+  apply lm11 in H.
+  destruct H.
+  unfold not in H.
+  apply lm12 in H.
+  destruct H.
+  apply lm13 in H1.
+  pose proof (G1 x).
+  destruct H2.
+  rewrite H2 in H.
+  apply lm7 in H.
+  exact.
+  unfold not.
+  intros.
+  rewrite H3 in H0.
+  apply A2P7 in H0.
+  exact.
+  destruct H2.
+  exists x.
+  split.
+  split.
+  apply lm5 in H2.
+  apply A3P4 in H2.
+  apply A3P3b in H2.
+  destruct H1.
+  destruct H2.
+  exact.
+  rewrite -H2 in H1.
+  pose proof lm2.
+  exact.
+  apply A4P6 in H.
+  apply abs_pos in H0.
+  rewrite H0 in H.
+  destruct H.
+  exact.
+  destruct H1.
+  apply lm6 in H3.
+  unfold not in H3.
+  exfalso.
+  apply H3.
   left.
   exact.
-  right.
-  unfold not,prime in H.
-  
-Admitted.
+  unfold not. intros. rewrite H3 in H0. apply A2P7 in H0. exact.
+  exact.
+  exists (-x).
+  split.
+  split.
+  apply lm5,A3P4,A3P3b in H2.
+  destruct H1.
+  destruct H2.
+  exact.
+  apply (S2 1 (-x) (-1)) in H2.
+  rewrite A1P8 A1P3 M3 in H2.
+  rewrite -H2 in H1.
+  pose proof lm3.
+  exact.
+  assert (-x|p).
+  unfold divide in H.
+  unfold divide.
+  destruct H.
+  exists (-x0).
+  rewrite A1P8.
+  exact.
+  apply A4P6 in H3.
+  apply abs_pos in H0.
+  rewrite H0 in H3.
+  destruct H3.
+  exact.
+  destruct H1.
+  apply lm6 in H4.
+  unfold not in H4.
+  exfalso.
+  apply H4.
+  apply (S2 (-x) p (-1)) in H3.
+  rewrite A1P8 M3 M1 A1P7 in H3.
+  right. exact.
+  unfold not.
+  intros. rewrite H4 in H0. apply A2P7 in H0. exact.
+  unfold divide in H.
+  unfold divide.
+  destruct H.
+  exists (-x0).
+  rewrite A1P8.
+  exact.
+Qed.
 
 Theorem A6P6 : \u2200 p x : Z, prime p \u2192 0 < p \u2192 0 < x \u2192 (p | x) \u2192
                           \u2203 k, k * p = x \u2227 0 < k < x.
 Proof.
+  intros.
+  unfold divide in H2.
+  destruct H2.
+  pose proof (G1 x0).
+  destruct H3.
+  rewrite H3 in H2.
+  rewrite A1P6 in H2.
+  rewrite H2 in H1.
+  apply A2P7 in H1.
+  exact.
+  destruct H3.
+  exists x0.
+  split.
+  exact.
+  split.
+  apply lm5 in H3.
+  exact.
+  
 Admitted.
 
-Theorem A6P7 : \u2200 n : Z, \u2203 p : Z, 0 < p \u2227 prime p \u2227 (p | n).
+Theorem A6P7 : \u2200 n : Z, \u00ac unit n -> \u2203 p : Z, 0 < p \u2227 prime p \u2227 (p | n).
 Proof.
+  intros.
+  pose proof (G1 n).
+  rename H into H100.
+  rename H0 into H.
+  destruct H.
+  exists 2.
+  split.
+  pose proof one_pos. apply add_pos in H0.
+  apply lm5 in H0.
+  exact.
+  split.
+  apply A6P2.
+  rewrite H.
+  unfold divide.
+  exists 0.
+  rewrite A1P6.
+  exact.
+  destruct H.
+  pose proof (classic (prime n)).
+  destruct H0.
+  exists n.
+  split.
+  apply lm5 in H. exact.
+  split. exact.
+  unfold divide. exists 1. rewrite A1P3.
+  exact.
+  induction n using A3P7.
+  apply A6P5 in H0.
+  destruct H0.
+  exact.
+  destruct H0.
+  pose proof H1 n.
+  destruct H2.
+  
+  
 Admitted.
 
 (* Euclid's lemma *)
